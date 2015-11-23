@@ -16,7 +16,7 @@ var canvas = $('#workSpace')[0],
 
 	function init() {
 		direction = 'down';
-		speed = 100;
+		speed = 500;
 		cellSize = 20;
 		createBlock();
 		paintDown();
@@ -33,7 +33,8 @@ var canvas = $('#workSpace')[0],
 			[{x:9, y:0},{x:8, y:1},{x:9, y:1},{x:10, y:1}],
 			[{x:8, y:0},{x:9, y:0},{x:8, y:1},{x:9, y:1}]
 			);
-		randomBlock = Math.floor(Math.random() * (6 - 0)) + 0;
+		//	randomBlock = Math.floor(Math.random() * (6 - 0)) + 0;
+		randomBlock = 0;
 	}
 
 	function setLoop(speed){
@@ -42,24 +43,51 @@ var canvas = $('#workSpace')[0],
 	}
 
 	function newBlock(){
-		if(block[randomBlock][3].y == 27){
-			allBlock.push(block[randomBlock]);
-			//var qq = block[randomBlock].x.join();
-			//console.log(qq);
+		if(block[randomBlock][3].y == 27 && !allBlock.length){
+			var tail = block[randomBlock];
+			for(var i = 0; i < tail.length; i++){
+				allBlock.push(tail[i]);
+			}
 			clearInterval(loop);
 			init();
 		}
 		if(allBlock.length > 0){
-			for(var i = 0; i < allBlock.length; i++){;
-			for(var k = 0; k < allBlock[i].length; k++){
-				var c = allBlock[i][k];
-				paintCanvas(c.x, c.y);
+			for( var i = 0; i < allBlock.length; i++){
+			for(var k = 0; k < block[randomBlock].length; k++){
+				if((allBlock[i].y == (block[randomBlock][k].y + 1) && allBlock[i].x == block[randomBlock][k].x ) || block[randomBlock][3].y == 27){
+					var tail = block[randomBlock];
+						for(var i = 0; i < tail.length; i++){
+							allBlock.push(tail[i]);
+						}
+					clearInterval(loop);
+					init();
+				}
 			}
 		}
 		}
+
+		if(allBlock.length > 0){
+			for(var i = 0; i < allBlock.length; i++){
+				var c = allBlock[i];
+				paintCanvas(c.x, c.y);
+			}
+		}
+	}
+
+	function turnBlock(){
+		if(direction == 'up'){
+			var prev = block[randomBlock];
+			var turn = block[randomBlock].pop();
+			turn.x = prev.y;
+			turn.y = prev.x;
+			block[randomBlock].push(turn);
+			console.log(block[randomBlock]);
+		}
+		direction = 'down';
 	}
 
 	function paintDown() {
+		turnBlock();
 		ctx.fillStyle = 'black';
 		ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 		ctx.strokeStyle = 'red';
