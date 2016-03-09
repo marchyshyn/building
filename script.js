@@ -75,19 +75,14 @@ var canvas = $('#workSpace')[0],
 	}
 
 	function turnBlock(){
-		if(direction == 'up'){
-			var prev = block[randomBlock];
-			var turn = block[randomBlock].pop();
-			turn.x = prev.y;
-			turn.y = prev.x;
-			block[randomBlock].push(turn);
-			console.log(block[randomBlock]);
-		}
-		direction = 'down';
+		
+			var prev = block[randomBlock].splice(block[randomBlock]);
+			var turn = block[randomBlock].splice(block[randomBlock]);
+			console.log(prev, turn, block[randomBlock]);
+			
 	}
 
 	function paintDown() {
-		turnBlock();
 		ctx.fillStyle = 'black';
 		ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 		ctx.strokeStyle = 'red';
@@ -110,6 +105,9 @@ var canvas = $('#workSpace')[0],
 			tail.y = ny;
 			tail.x = nx;
 		};
+		if(direction == 'up'){
+			turnBlock();
+		}
 		direction = 'down';
 		newBlock();
 		for(var i = 0; i < block[randomBlock].length; i++){
